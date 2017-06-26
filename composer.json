@@ -1,0 +1,17 @@
+{
+    "name": "devkang/git-webhooks",
+    "description": "a package for git webhooks deployment",
+    "license": "MIT",
+    "require": {
+        "laravel/framework": "5.4.*"
+    },
+    "authors": [
+        {
+            "name": "DevKang",
+            "email": "cn.devkang@gmail.com"
+        }
+    ]
+
+
+}
+
