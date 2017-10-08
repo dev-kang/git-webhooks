@@ -24,8 +24,15 @@ class WebhooksController extends BaseController
     public function index(Request $request)
     {
         $projectPath = base_path();
+        $git_config = config('git');
+        // merge commands
+        $commands = array_merge($git_config['git_commands'], $git_config['migration_commands'], $git_config['commands']);
+        $result = [];
 
-        return $this->runLocalShell('git pull', $projectPath);
+        foreach ($commands as $command) {
+            $result[] = $this->runLocalShell($command, $projectPath);
+        }
+        return $result;
     }
 
     /**
@@ -41,7 +48,6 @@ class WebhooksController extends BaseController
             $process->setWorkingDirectory($cwd);
         }
         $process->run();
-
         if ($process->getExitCode() != 0) {
             return $process->getErrorOutput();
         }

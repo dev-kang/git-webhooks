@@ -15,6 +15,10 @@ class WebhooksProvider extends ServiceProvider
      */
     public function boot()
     {
+        $path = realpath(__DIR__.'/../../config/config.php');
+
+        $this->publishes([$path => config_path('git.php')], 'config');
+        $this->mergeConfigFrom($path, 'git');
         //
 
         Route::prefix('git')
