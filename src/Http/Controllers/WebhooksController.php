@@ -25,6 +25,17 @@ class WebhooksController extends BaseController
     {
         $projectPath = base_path();
         $git_config = config('git');
+
+        if (!empty($git_config['X-Gitlab-Token']) ) {
+            if ($request->header('X-Gitlab-Token') != $git_config['X-Gitlab-Token']) {
+                return $this->noAuthentication();
+            }
+        }
+        if (!empty($git_config['X-Hub-Signature'])) {
+            if ($request->header('X-Hub-Signature') != $git_config['X-Hub-Signature']) {
+                return $this->noAuthentication();
+            }
+        }
         // merge commands
         $commands = array_merge($git_config['git_commands'], $git_config['migration_commands'], $git_config['commands']);
         $result = [];
@@ -52,5 +63,10 @@ class WebhooksController extends BaseController
             return $process->getErrorOutput();
         }
         return $process->getOutput();
+    }
+
+    public function noAuthentication()
+    {
+        return response('Authentication failure')->setStatusCode(401);
     }
 }
